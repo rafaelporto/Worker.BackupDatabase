@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,9 +35,15 @@ namespace ITS.Worker
                         Log.Information("Localizado a pasta de destino: {targetPath}", _config.TargetPath);
 
                         string destFile = Path.Combine(_config.TargetPath, _config.GetTargetFileName());
-                        File.Copy(sourceFile, destFile, true);
-
-                        Log.Information("Backup efetuado com sucesso!");
+                        try
+                        {
+                            File.Copy(sourceFile, destFile, true);
+                            Log.Information("Backup efetuado com sucesso!");
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e, "**** Ocorreu um erro ao copiar o arquivo para a pasta de destino ****");
+                        }
                     }
                     else
                         Log.Warning("Não foi localizado a pasta de destino: {targetPath}", _config.TargetPath);
